@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revenue Forecast</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9f9f9;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .title {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .forecast-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .forecast-table th, .forecast-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .forecast-table th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Revenue Forecasting</h1>
+        
+        <label for="periods">Forecast Periods (weeks): </label>
+        <input type="number" id="periods" value="12" min="1" max="52">
+        
+        <button onclick="getForecast()">Get Forecast</button>
+
+        <table id="forecast-table" class="forecast-table">
+            <thead>
+                <tr>
+                    <th>Week Date</th>
+                    <th>Forecasted Revenue</th>
+                    <th>Lower Bound</th>
+                    <th>Upper Bound</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Forecast data will populate here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function getForecast() {
+            const periods = document.getElementById('periods').value;
+            const response = await fetch(`/forecast?periods=${periods}`);
+            const data = await response.json();
+            
+            // Populate the table
+            const tableBody = document.querySelector('#forecast-table tbody');
+            tableBody.innerHTML = '';  // Clear the table
+
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.ds}</td>
+                    <td>${item.yhat}</td>
+                    <td>${item.yhat_lower}</td>
+                    <td>${item.yhat_upper}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+    </script>
+</body>
+</html>
