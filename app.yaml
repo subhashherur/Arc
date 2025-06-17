@@ -1,0 +1,8 @@
+runtime: python39  # Use the appropriate Python version runtime
+
+entrypoint: gunicorn -b :$PORT app:app  # Use gunicorn to run the Flask app
+
+env_variables:
+  GOOGLE_APPLICATION_CREDENTIALS: "path/to/credentials.json"  # If you're using Google Cloud Storage or other APIs
+
+instance_class: F2  # F2 is a good fit for medium traffic; adjust as needed
